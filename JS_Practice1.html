@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head></head>
+<body>
+<p id="greeting"> WHOA</p>
+
+<script>
+function getGreeting () {
+var hellos = [
+"Nanu nanu!",
+"Wassup!",
+"Yo!",
+"Hello movie lover!",
+"Ay up me duck!",
+"Hola!"
+];
+
+var index = Math.floor(Math.random() * hellos.length);
+return hellos[index];
+}
+
+function updateGreeting () {
+para.innerHTML = getGreeting();
+}
+var para = document.getElementById("greeting");
+updateGreeting();
+</script>
+</body>

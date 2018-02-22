@@ -1,0 +1,46 @@
+<!--creating a function that calculates a colour of red or green based off of
+a value from -2 - 2 -->
+
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      color: rgba(0,255,0,1);
+      font-size: 45px;
+    }
+  </style>
+  <title>Red/Green Calculator</title>
+
+</head>
+<body>Hello
+  <script>
+
+    function redGreenCalc(sentiment) {
+      var green = Math.floor(((sentiment+2) / 4) * 255);
+      if(sentiment === 2)
+        var red = 0;
+      else
+        var red = Math.floor(((sentiment-2) / -4) * 255);
+      //return 'rgba(' + red +', ' + green + ', 0, 1)';
+
+      document.querySelector('body').style.color =
+          'rgba(' + red +', ' + green + ', 0, 1)';
+    };
+
+
+    //function to find a random number between -2 and 2
+    function randomSentiment() {
+      return (Math.random() * 4) -2;
+    };
+    function randomRedGreenCalc() {
+       return redGreenCalc(randomSentiment());
+    };
+
+    //redGreenCalc(randomSentiment())
+    setInterval(randomRedGreenCalc, 1000);
+
+
+  </script>
+</body>
+</html>

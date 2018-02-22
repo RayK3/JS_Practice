@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head></head>
+<body>
+  <p id="paragraph">IT DIDNT WORK</p>
+<button id="btn"> Color Changer </button>
+<script>
+var colors = ["blue","red","yellow","green","black","teal", "purple", "orange"];
+function randomColor () {
+  var i = Math.floor(Math.random() * 8);
+  return colors[i];
+};
+function myFunction () {
+  var para = document.getElementById("paragraph");
+  para.innerHTML = "<style> button {color: " + randomColor() +"; border: " + Math.floor(Math.random() * 9) + "px solid " + randomColor() +";}</style><p>IT WORKED</p>";
+};
+var btn = document.getElementById("btn");
+
+btn.addEventListener("click", myFunction);
+</script>
+
+</body>
+</html>
