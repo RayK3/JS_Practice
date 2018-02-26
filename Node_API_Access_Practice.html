@@ -1,0 +1,182 @@
+<!-- The secret key: 355c9574914c83b28623931d0c693e32 -->
+
+<!DOCTYPE = html>
+<html>
+<head>
+  <title>Some Weather Information?</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+  <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+  <script>
+    var graphs = {};
+    function request(firstCall) {
+      if(graphs === {}){
+        arguments[0] = true;
+      }
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if(this.readyState == 4 && this.status == 200) {
+          var weather = JSON.parse(this.responseText);
+          var weatherData = weather.hourly.data;
+          var times = weatherData.map(e => e.time);
+          var hours = times.map(e => {
+            var options = { month: 'short', day: 'numeric'};
+            var date =new Date(e * 1000);
+            return date.toLocaleTimeString('en-us', options);
+          });
+          var temps = weatherData.map(e => e.temperature);
+          var tempDatasets = [];
+          tempDatasets.push({
+            label: 'Today\'s Temperature By Hour',
+            data: temps
+          })
+          if(firstCall) {
+            graphs.tempGraph = createGraph(hours, tempDatasets,'temp');
+          }
+          else {
+            graphs.tempGraph.chart.config.data.datasets = tempDatasets;
+            graphs.tempGraph.chart.config.data.datasets.forEach(e => e.backgroundColor = 'rgba(200,100, 0, 0.4)');
+            graphs.tempGraph.update();
+          }
+          var hums = weatherData.map(e => e.humidity);
+          var humDatasets = [];
+          humDatasets.push({
+            label: 'Today\'s Humidity By Hour',
+            data: hums
+          })
+          if(firstCall) {
+            graphs.humGraph = createGraph(hours, humDatasets, 'hum');
+          }
+          else {
+            graphs.humGraph.chart.config.data.datasets = humDatasets;
+            graphs.humGraph.chart.config.data.datasets.forEach(e => e.backgroundColor = 'rgba(200,100, 0, 0.4)');
+            graphs.humGraph.update();
+          }
+          var windGusts = weatherData.map(e => e.windGust);
+          var windSpeeds = weatherData.map(e => e.windSpeed);
+          var windDatasets = [];
+          windDatasets.push({
+            label: 'Wind Gusts',
+            data: windGusts
+          },
+          {
+            label: 'Wind Speeds',
+            data: windSpeeds
+          });
+          if(firstCall) {
+            graphs.windGraph = createGraph(hours, windDatasets, 'wind');
+          }
+          else {
+            graphs.windGraph.chart.config.data.datasets = windDatasets;
+            graphs.windGraph.chart.config.data.datasets.forEach(e => e.backgroundColor = 'rgba(200,100, 0, 0.4)');
+            graphs.windGraph.update();
+          }
+        }
+      }
+      xhttp.open("GET","http://127.0.0.1:1337/weather",true);
+      xhttp.send();
+    };
+    function graphUpdate() {
+      function update () { console.log('updating'); return request(false);}
+      setTimeout(update, 2500);
+    }
+
+    function createGraph(labels, datasets, id) {
+
+      var chart = document.getElementById(id).getContext('2d');
+
+      var gradient = chart.createLinearGradient(0,0,0, 800);
+      if(id === 'wind'){
+        gradient.addColorStop(0, 'rgba(255, 150, 150, 0.3)');
+        gradient.addColorStop(1, 'rgba(255, 255, 0, 0.3)');
+      }
+      else {
+        gradient.addColorStop(0, 'rgba(255, 150, 150, 1)');
+        gradient.addColorStop(1, 'rgba(255, 255, 0, 1)');
+      }
+      datasets.forEach(e => e.backgroundColor = gradient);
+
+      var graphElement = new Chart(chart, {
+        type: 'line',
+
+        data: {
+
+          labels: labels,
+
+          datasets,
+
+        },
+
+        options: {},
+      });
+      return graphElement;
+    };
+
+
+    window.addEventListener('load', request);
+    window.addEventListener('load', graphUpdate);
+
+  </script>
+
+  <style>
+
+    .temperature {
+
+      padding: 25px;
+
+    }
+
+    .humidity {
+
+      padding: 25px;
+
+    }
+
+    .temperature strong {
+
+      color: rgb(80,30,30);
+
+    }
+
+    .humidity strong {
+
+      color: blue;
+
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+  <div class="temperature">
+
+    <strong>Temperature Data from the API</strong>
+
+    <canvas id="temp"></canvas>
+
+  </div>
+
+  <div class="humidity">
+
+    <strong >Humidity Data from the API</strong>
+
+    <canvas id="hum"></canvas>
+
+  </div>
+
+  <div class="wind speeds">
+
+    <strong >Wind Speeds and Gusts from the API</strong>
+
+    <canvas id="wind"></canvas>
+
+  </div>
+
+  <a href="https://darksky.net/poweredby/">Powered by Dark Sky</a>
+
+<body>
+
+</html>
