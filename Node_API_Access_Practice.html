@@ -11,6 +11,7 @@
   <script>
     var graphs = {};
     function request(firstCall) {
+      console.log('Requesting from your server');
       if(graphs === {}){
         arguments[0] = true;
       }
@@ -79,7 +80,7 @@
     };
     function graphUpdate() {
       function update () { console.log('updating'); return request(false);}
-      setTimeout(update, 2500);
+      setInterval(update, 2500);
     }
 
     function createGraph(labels, datasets, id) {
