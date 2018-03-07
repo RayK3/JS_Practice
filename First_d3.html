@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.13.0/d3.min.js"></script>
+</head>
+<body>
+  <script>
+
+  var svg = d3.select("body").append("svg")
+              .attr("width", 500)
+              .attr("height", 500);
+
+  svg.selectAll("circle")
+     .data([1, 2, 3, 4, 5])
+     .enter().append("circle")
+     .attr("cx", function(d) { return d * 70; })
+     .attr("cy", 50)
+     .attr("r", 20)
+     .attr("fill", "aliceblue")
+     .attr("stroke", "black")
+     .on("mouseover", function() { d3.select(this).style("stroke", "steelblue"); })
+     .on("mouseout", function() { d3.select(this).style("stroke", "black"); })
+     .on("mousedown", toggleExpand);
+
+  function toggleExpand() {
+    if(!d3.select(this).attr("expanded")) {
+      d3.select(this).attr("expanded", "expanded")
+                     .transition()
+                         .duration(1000)
+                         .attr("r", 10)
+                         .attr("fill", "steelblue");
+    } else {
+      d3.select(this).attr("expanded", null)
+                     .transition()
+                         .duration(1000)
+                         .attr("r", 20)
+                         .attr("fill", "aliceblue");
+    }
+  }
+
+
+
+  </script>
+</body>
+</html>
