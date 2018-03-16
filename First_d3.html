@@ -6,6 +6,8 @@
 <body>
   <script>
 
+  var startingY = 100;
+
   var svg = d3.select("body").append("svg")
               .attr("width", 500)
               .attr("height", 500);
@@ -14,7 +16,7 @@
      .data([1, 2, 3, 4, 5])
      .enter().append("circle")
      .attr("cx", function(d) { return d * 70; })
-     .attr("cy", 50)
+     .attr("cy", startingY)
      .attr("r", 20)
      .attr("fill", "aliceblue")
      .attr("stroke", "black")
@@ -26,15 +28,17 @@
     if(!d3.select(this).attr("expanded")) {
       d3.select(this).attr("expanded", "expanded")
                      .transition()
-                         .duration(1000)
+                         .duration(500)
                          .attr("r", 10)
-                         .attr("fill", "steelblue");
+                         .attr("fill", "skyblue")
+                         .attr("cy", function(d) { return Math.sqrt(d*1500); });
     } else {
       d3.select(this).attr("expanded", null)
                      .transition()
-                         .duration(1000)
+                         .duration(500)
                          .attr("r", 20)
-                         .attr("fill", "aliceblue");
+                         .attr("fill", "aliceblue")
+                         .attr("cy", startingY);
     }
   }
 

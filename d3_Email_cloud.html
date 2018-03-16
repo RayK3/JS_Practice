@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Email Cloud</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.13.0/d3.min.js"></script>
+  <script src="https://d3js.org/d3-zoom.v1.min.js"></script>
+  <style>
+  svg {
+    border: 1px solid #dedede;
+
+  }
+
+  svg g {
+    border: 1px solid black;
+  }
+
+  </style>
+</head>
+<body>
+  <div id="follow" style="position: absolute; left: 0px; top: 650px; height: 50px; width: 50; background-color: red;"></div>
+  <script>
+
+//var zoom = d3.zoom();
+
+function Email() {
+  var obj = {};
+  obj.date = Math.floor(Math.random() * 4000000) + 1520350000000;
+  obj.sent = (Math.random() * 10).toFixed(1);
+  obj.sentBy = 'Me';
+  obj.receivedBy = 'You';
+  return obj;
+}
+
+
+var emails = [];
+
+for(var i = 0; i < 500; i++) {
+  emails.push(new Email());
+}
+
+emails.sort(function(a, b) {
+  if(a.date > b.date) {
+    return 1;
+  } else {
+    return -1;
+  }
+});
+
+var followDiv = document.getElementById("follow");
+console.log('Follow Div:', {followDiv});
+
+var outerWidth = 750;
+var outerHeight = 600;
+var MARGINS = {left: 50, top: 70, right: 50, bottom: 50};
+var pointRadius = 2;
+
+
+var graph = d3.select("body").append("svg")
+        .attr("width", outerWidth)
+        .attr("height", outerHeight)
+
+
+var xScale = d3.scaleLinear()
+        .domain(d3.extent(emails.map(email => email.date)))
+        .range([MARGINS.left, outerWidth - MARGINS.right]);
+
+var yScale = d3.scaleLinear()
+        .domain(d3.extent(emails.map(email => email.sent)))
+        .range([outerHeight - MARGINS.bottom, MARGINS.top]);
+
+var colorScale = d3.scaleLinear()
+        .domain(d3.extent(emails.map(email => email.sent)))
+        .range(['red', 'green']);
+
+var yAxis = d3.axisLeft(yScale)
+        .ticks(10);
+
+var xAxis = d3.axisBottom(xScale)
+        .ticks(d3.timeDay.every(4));
+
+var title = graph.append("text")
+        .attr("x", outerWidth / 2 - 50)
+        .attr("y", MARGINS.top - 30)
+        .attr("font-family", "sans-serif")
+        .attr("font-size", "20px")
+        .attr("fill", "steelblue")
+        .text("Email Cloud");
+
+
+var graphCircles = graph.selectAll("circle")
+        .data(emails)
+        .enter().append("circle")
+        .attr("cx", function(email) { return xScale(email.date); })
+        .attr("cy", function(email) { return yScale(email.sent); })
+        .attr("r", pointRadius)
+        .attr("fill", function(email) { return colorScale(email.sent); })
+        .on("mousedown", function() {
+          var cx = d3.select(this).attr("cx");
+          var cy = d3.select(this).attr("cy");
+
+          console.log(cx, cy);
+
+        });
+
+var yAxisGroup = graph.append("g")
+                      .attr("class", "yAxis")
+                      .attr("transform", "translate(30, 0)")
+                      .call(yAxis);
+
+yAxisGroup.selectAll(".tick")
+                      .attr("stroke", "steelblue");
+
+yAxisGroup.select(".domain")
+                      .attr("stroke", "steelblue");
+
+var xAxisGroup = graph.append("g")
+                      .attr("class", "xAxis")
+                      .attr("transform", "translate(0, " + (outerHeight - 30) + ")")
+                      .call(xAxis);
+
+xAxisGroup.selectAll
+
+
+  </script>
+</body>
+</html>
