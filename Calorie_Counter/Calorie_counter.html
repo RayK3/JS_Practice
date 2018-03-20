@@ -2,61 +2,93 @@
 <html>
 <head>
   <script src="script.js"></script>
+  <link rel="stylesheet"
+        href="node_modules/material-components-web/dist/material-components-web.css">
+  <script src="node_modules/material-components-web/dist/material-components-web.js"></script>
+  <script>mdc.autoInit()</script>
   <style>
-  div {
+  .inputs {
     padding: 20px;
   }
   #printField p {
     font-size: 20px;
   }
-  body {
-    background-color: rgb(240, 240, 240);
+  h2 {
+    font-size: 2rem;
   }
-  button {
-    color: aliceblue;
-    background-color: steelblue;
-    border: none;
-    border-radius: 4px;
+  body {
+    background-color: #ddd;
+  }
+
+  }
+  .table table {
+    width: 100%;
+  }
+  th, td {
+    text-align: center;
   }
   </style>
 </head>
 <body>
-  <div id="addMeal">
-    <button id="addMealButton">Add Meal</button>
-    <input type="text" id="addMealInput" placeholder="Which meal was it?"></input>
+  <div class="mdc-card">
+    <div class="mdc-card__media">
+      <h2 class="mdc-card__media-content">Add/Remove Meals or Items</h2>
+    </div>
+    <div class="mdc-card__actions">
+      <div id="addMeal">
+        <button id="addMealButton" class="mdc-button mdc-card__action mdc-card__action--button">Add Meal</button>
+        <div id="addMealInputs" class="inputs">
+          <input type="text" id="addMealInput" placeholder="Which meal was it?"></input>
+        </div>
+      </div>
+      <div id="removeMeal">
+        <button id="removeMealButton" class="mdc-button mdc-card__action mdc-card__action--button">Remove Meal</button>
+        <div id="removeMealInputs" class="inputs">
+          <input type="text" id="removeMealInput" placeholder="Which meal was it?"></input>
+        </div>
+      </div>
+      <div id="addItem">
+        <button id="addItemButton" class="mdc-button mdc-card__action mdc-card__action--button">Add Item</button>
+        <div id="addItemInputs" class="inputs">
+          <input type="text" id="newItemMeal" placeholder="Which meal?"></input>
+          <input type="text" id="newItem" placeholder="Which item?"></input>
+          <input type="text" id="newItemCalories" placeholder="How many calories?"></input>
+        </div>
+      </div>
+      <div id="removeItem">
+        <button id="removeItemButton" class="mdc-button mdc-card__action mdc-card__action--button">Remove Item</button>
+        <div id="removeItemInputs" class="inputs">
+          <input type="text" id="itemToRemoveMeal" placeholder="Which meal?"></input>
+          <input type="text" id="itemToRemove" placeholder="Which item?"></input>
+        </div>
+      </div>
+    </div>
   </div>
-  <div id="removeMeal">
-    <button id="removeMealButton">Remove Meal</button>
-    <input type="text" id="removeMealInput" placeholder="Which meal was it?"></input>
-  </div>
-  <div id="addItem">
-    <button id="addItemButton">Add Item</button>
-    <input type="text" id="newItemMeal" placeholder="Which meal?"></input>
-    <input type="text" id="newItem" placeholder="Which item?"></input>
-    <input type="text" id="newItemCalories" placeholder="How many calories?"></input>
-  </div>
-  <div id="removeItem">
-    <button id="removeItemButton">Remove Item</button>
-    <input type="text" id="itemToRemoveMeal" placeholder="Which meal?"></input>
-    <input type="text" id="itemToRemove" placeholder="Which item?"></input>
-  </div>
-  <div id="printField">
+  <div id="printField" class="mdl-card mdl-shadow--2dp">
     <div id="itemSummary">
-      <p>Item Summary</p>
-      <table id="itemTable">
-        <tr>
-          <td>No Meals</td>
-        </tr>
-      </table>
+      <div class="mdl-card__title">
+        <h2>Item Summary</h2>
+      </div>
+      <div class="table">
+        <table id="itemTable" class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp">
+          <tr>
+            <td>No Meals</td>
+          </tr>
+        </table>
+      </div>
     </div>
     <div id="calorieSummary">
-      <p>Calorie Summary</p>
-      <table id="calorieTable">
-        <tr>
-          <td>Total</td>
-          <td>0</td>
-        </tr>
-      </table>
+      <div class="mdl-card__title">
+        <h2>Calorie Summary</h2>
+      </div>
+      <div class="table">
+        <table id="calorieTable" class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp">
+          <tr>
+            <td>Total</td>
+            <td>0</td>
+          </tr>
+        </table>
+      </div>
     </div>
   </div>
 </body>

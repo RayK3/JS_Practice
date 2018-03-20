@@ -31,6 +31,9 @@ window.onload = function() {
 
 
     addItem: function(meal, item) {
+      if(!this.meals[meal]) {
+        this.meals[meal] = new this.Meal();
+      }
       this.meals[meal].items[item.name] = item.calories;
       this.meals[meal].calories += item.calories;
       this.sumCalories();
@@ -50,7 +53,7 @@ window.onload = function() {
 
 
     summarizeCalories: function() {
-      var html = '<tr><th>Meal</th><th>Calories</th></tr>';
+      var html = '<thead><tr><th>Meal</th><th>Calories</th></tr></thead><tbody>';
 
       for(meal in this.meals) {
         html += `<tr>
@@ -62,13 +65,14 @@ window.onload = function() {
       html += `<tr>
                  <td>Total</td>
                  <td>${this.calories}</td>
-               </tr>`;
+               </tr>
+            </tbody>`;
 
       calorieTable.innerHTML = html;
     },
 
     summarizeItems: function() {
-      var html = '<tr><th>Meal</th><th>Item</th><th>Calories</th>';
+      var html = '<thead><tr><th>Meal</th><th>Item</th><th>Calories</th></tr></thead><tbody>';
 
 
       for(meal in this.meals) {
@@ -80,9 +84,16 @@ window.onload = function() {
                    </tr>`;
         }
       }
+      html += '</tbody>'
       itemTable.innerHTML = html;
     }
   };
+
+  // var buttons = document.querySelectorAll("button").forEach(function(button) {
+  //   button.addEventListener('mouseover', function() {
+  //     console.log(this);
+  //   });
+  // })
 
   var addMealButton = document.getElementById("addMealButton");
   var addMealInput = document.getElementById("addMealInput");

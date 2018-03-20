@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet"
+        href="node_modules/material-components-web/dist/material-components-web.css">
+  <script src="node_modules/material-components-web/dist/material-components-web.js"></script>
+  <script>mdc.autoInit()</script>
+  <style>
+  /* .scoreDisplays {
+    font-family: arial;
+  } */
+  </style>
+</head>
+<body>
+  <div class="mdc-layout-grid">
+    <div class="mdc-layout-grid__inner">
+      <div class="mdc-layout-grid__cell">
+        <div class="mdc-card">
+          <div class="mdc-card__media">
+            <div class="mdc-card__media-content">Sentiment Scores</div>
+          </div>
+          <div class="mdc-layout-grid__inner">
+            <div class="mdc-card__actions">
+              <div class="row scoreDisplays">
+                <strong id="veryNegativeScore">Very Negative</strong>
+                <p style="color: red">0 - 3</p>
+              </div>
+              <div class="mdc-layout-grid__cell scoreDisplays">
+                <strong id="negativeScore">Negative</strong>
+                <p>3 - 5</p>
+              </div>
+              <div class="mdc-layout-grid__cell scoreDisplays">
+                <strong id="positiveScore">Positive</strong>
+                <p>5 - 7</p>
+              </div>
+              <div class="mdc-layout-grid__cell scoreDisplays">
+                <strong id="veryPositiveScore">Very Positive</strong>
+                <p>7 - 10</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
