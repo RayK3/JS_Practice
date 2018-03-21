@@ -3,6 +3,8 @@ window.onload = function() {
   var calorieCounter = {
     meals: {},
     calories: 0,
+    chart: null,
+    isGraphed: false,
     Meal: function() {
       this.items = {},
       this.calories = 0;
@@ -86,14 +88,54 @@ window.onload = function() {
       }
       html += '</tbody>'
       itemTable.innerHTML = html;
+    },
+    graph: function() {
+      var mealItems = [];
+      for(meal in this.meals) {
+        mealItems.push(this.meals[meal].items);
+      }
+
+      var names =  [];
+      var calories = [];
+      mealItems.forEach(function(meal) {
+        for(item in meal) {
+          names.push(item);
+          calories.push(meal[item]);
+        }
+      });
+
+      if(!this.isGraphed) {
+        console.log('graphing');
+        var ctx = document.getElementById('itemBar').getContext('2d');
+        this.chart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: names,
+            datasets: [{
+              label: 'Calories Per Item',
+              backgroundColor: 'limegreen',
+              data: calories,
+            }]
+          },
+          options: {
+            scales: {
+              yAxes: [{
+                ticks: {
+                  beginAtZero: true,
+                }
+              }]
+            }
+          }
+        });
+        this.isGraphed = true;
+      } else {
+        console.log('updating');
+        this.chart.data.labels = names;
+        this.chart.data.datasets[0].data = calories;
+        this.chart.update();
+      }
     }
   };
-
-  // var buttons = document.querySelectorAll("button").forEach(function(button) {
-  //   button.addEventListener('mouseover', function() {
-  //     console.log(this);
-  //   });
-  // })
 
   var addMealButton = document.getElementById("addMealButton");
   var addMealInput = document.getElementById("addMealInput");
@@ -132,6 +174,7 @@ window.onload = function() {
         removeMealInput.value = '';
         calorieCounter.summarizeCalories();
         calorieCounter.summarizeItems();
+        calorieCounter.graph();
       } else {
         console.log('This meal wasn\'t added');
       }
@@ -153,6 +196,7 @@ window.onload = function() {
       newItemMeal.value = '';
       calorieCounter.summarizeCalories();
       calorieCounter.summarizeItems();
+      calorieCounter.graph();
     }
   });
 
@@ -165,6 +209,7 @@ window.onload = function() {
         itemToRemove.value = '';
         calorieCounter.summarizeCalories();
         calorieCounter.summarizeItems();
+        calorieCounter.graph();
       } else {
         console.log('This item wasn\'t added');
       }

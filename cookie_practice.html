@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script>
+  document.cookie = 'name=ray';
+  console.log(document.cookie);
+
+  var xhttp = new XMLHttpRequest();
+  var url = "http://127.0.0.1:1337/cookies";
+  var params = "thing1=ipsum&thing2=binny";
+  xhttp.open("POST", url, true);
+
+  xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+  xhttp.onreadystatechange = function() {
+    if(xhttp.readyState == 4 && xhttp.status == 200) {
+      alert(xhttp.responseText);
+    }
+  }
+  xhttp.send(params);
+  </script>
+</head>
+<body>
+</body>
+</html>
