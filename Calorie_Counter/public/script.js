@@ -1,12 +1,81 @@
 window.onload = function() {
 
+  function getCookie(name) {
+    var value = "; " + document.cookie;
+    if(value.includes(name)) {
+      var parts = value.split("; " + name + "=");
+      if(parts.length == 2) return parts.pop().split(";").shift();
+    }
+    else return;
+  }
+
   var calorieCounter = {
     meals: {},
     calories: 0,
     chart: null,
     isGraphed: false,
+    guid: getCookie("id"),
+
+    getPreviousCalorieCounter: function() {
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if(xhttp.readyState == 4 && xhttp.status == 200) {
+          if(!this.responseText) {
+            return;
+          } else {
+            var previous = JSON.parse(this.responseText);
+
+            calorieCounter['meals'] = previous['meals'];
+            calorieCounter['calories'] = previous['calories'];
+            calorieCounter['guid'] = previous['guid'];
+
+            calorieCounter.summarizeItems();
+            calorieCounter.summarizeCalories();
+            calorieCounter.graph();
+          }
+        }
+      }
+      xhttp.open("GET", "http://127.0.0.1:8000/calorie_counter?id=" + this.guid, true);
+      xhttp.send();
+    },
+
+    updateJSON: function() {
+      function guid() {
+        function s4() {
+          return Math.floor((1 + Math.random()) * 0x10000)
+            .toString(16)
+            .substring(1);
+        }
+        return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+      }
+
+      if(!getCookie("id")) {
+        let newGuid = guid();
+        document.cookie = "id=" + newGuid;
+        this.guid = newGuid;
+      }
+
+      var xhttp = new XMLHttpRequest();
+      var url = "http://127.0.0.1:8000/setGuid";
+
+      var oldInfo = {
+        meals: this.meals,
+        calories: this.calories,
+        guid: this.guid,
+      };
+
+      var params = "id=" + this.guid + "&calorieCounter=" + JSON.stringify(oldInfo);
+
+      xhttp.open("POST", url, true);
+
+      xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+      xhttp.send(params);
+
+    },
+
     Meal: function() {
-      this.items = {},
+      this.items = {};
       this.calories = 0;
     },
 
@@ -134,7 +203,8 @@ window.onload = function() {
         this.chart.data.datasets[0].data = calories;
         this.chart.update();
       }
-    }
+    },
+
   };
 
   var addMealButton = document.getElementById("addMealButton");
@@ -162,6 +232,7 @@ window.onload = function() {
       calorieCounter.addMeal(addMealInput.value);
       calorieCounter.summarizeCalories();
       calorieCounter.summarizeItems();
+      calorieCounter.updateJSON();
       addMealInput.value = '';
     }
   });
@@ -175,6 +246,7 @@ window.onload = function() {
         calorieCounter.summarizeCalories();
         calorieCounter.summarizeItems();
         calorieCounter.graph();
+        calorieCounter.updateJSON();
       } else {
         console.log('This meal wasn\'t added');
       }
@@ -197,6 +269,7 @@ window.onload = function() {
       calorieCounter.summarizeCalories();
       calorieCounter.summarizeItems();
       calorieCounter.graph();
+      calorieCounter.updateJSON();
     }
   });
 
@@ -210,11 +283,11 @@ window.onload = function() {
         calorieCounter.summarizeCalories();
         calorieCounter.summarizeItems();
         calorieCounter.graph();
+        calorieCounter.updateJSON();
       } else {
         console.log('This item wasn\'t added');
       }
     }
   });
-
-
+  calorieCounter.getPreviousCalorieCounter();
 };

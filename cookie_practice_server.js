@@ -8,11 +8,24 @@ var app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+function guid() {
+  function s4() {
+    return Math.floor((1 + Math.random()) * 0x10000)
+      .toString(16)
+      .substring(1);
+  }
+  return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+}
+
+
 app.post('/cookies', function(req, res) {
-  var thing1 = req.body.thing1;
-  var thing2 = req.body.thing2;
-  console.log("thing1 = " + thing1 + ", thing2 = " + thing2);
-  res.end("yes");
+  res.setHeader('content-type', 'text/plain');
+  if(!req.body.id) {
+    console.log(req.body.id);
+    res.send("id=" + guid());
+  }
+  res.end();
+
 });
 app.listen(3000, function() {
   console.log("Started on Port 3000");

@@ -2,22 +2,30 @@
 <html>
 <head>
   <script>
-  document.cookie = 'name=ray';
-  console.log(document.cookie);
-
   var xhttp = new XMLHttpRequest();
-  var url = "http://127.0.0.1:1337/cookies";
-  var params = "thing1=ipsum&thing2=binny";
+  var url = "http://127.0.0.1:3000/cookies";
+
+  function getCookie(name) {
+    var value = "; " + document.cookie;
+    var parts = value.split("; " + name + "=");
+    if(parts.length == 2) return parts.pop().split(";").shift();
+  }
+  console.log(getCookie('id'));
+
+  var params = "id=" + getCookie("id");
   xhttp.open("POST", url, true);
 
   xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
   xhttp.onreadystatechange = function() {
     if(xhttp.readyState == 4 && xhttp.status == 200) {
-      alert(xhttp.responseText);
+      if(this.responseText !== '') {
+        document.cookie = this.responseText;
+      }
     }
   }
   xhttp.send(params);
+
   </script>
 </head>
 <body>
