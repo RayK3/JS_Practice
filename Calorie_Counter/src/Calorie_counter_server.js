@@ -18,12 +18,52 @@ app.get('/', function(req, res) {
 });
 
 app.get('/calorie_counter', function(req, res) {
-  res.send(calorieCounters[req.query.id]);
+  fs.readFile('./calorie_counters.txt', function read(err, data) {
+    if (err) {
+      throw err;
+    }
+    content = data;
+    processFile();
+  });
+
+  function processFile() {
+    var content = JSON.parse(content);
+    res.send(content[req.query.id]);
+  }
 });
 
 app.post('/setGuid', function(req, res) {
-  res.setHeader('content-type', 'text/json');
-  calorieCounters[req.body.id] = req.body.calorieCounter;
+  fs.stat('./calorie_counters.txt', function(err, stat) {
+    if (err == null) {
+      fs.readFile('./calorie_counters.txt', function read(err, data) {
+        if (err) {
+          throw err;
+        }
+        content = data;
+        processFile();
+      });
+
+      function processFile() {
+        var content = JSON.parse(content);
+        content[req.body.id] = req.body.calorieCounter;
+        content = JSON.stringify(content);
+        fs.writeFile('./calorie_counters.txt', content, function (err) {
+          if (err) throw err;
+          console.log('The file has been saved');
+        });
+      }
+    } else if(err.code == 'ENOENT') {
+      var obj = {};
+      obj[req.body.id] = req.body.calorieCounter;
+      console.log('File does not exist');
+      fs.writeFile('./calorie_counters.txt', JSON.stringify(obj), function (err) {
+        if (err) throw err;
+        console.log('The file has been saved');
+      });
+    } else {
+      console.log('Some other error: ', err.code);
+    }
+  })
   res.end();
 });
 
